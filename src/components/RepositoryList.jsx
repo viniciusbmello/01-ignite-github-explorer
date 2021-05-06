@@ -1,19 +1,23 @@
+import { useState, useEffect } from 'react'
 import { RepositoryItem } from './RepositoryItem'
-
-const repository = {
-  name: "unform" ,
-  description: "Forms in ReactJS",
-  link: "https://github.com/unform/unform"
-}
+import '../styles/repositories.scss'
 
 export function RepositoryList() {
+  const [repositories, setRepositories] = useState([])
+
+  useEffect(() => {
+    fetch('https://api.github.com/users/viniciusbmello/repos')
+    .then(res => res.json())
+    .then(data => setRepositories(data));
+  }, [])
+
   return (
     <section className="repository-list">
       <h1>Repository List</h1>
       <ul>
-        <RepositoryItem repository={repository} />
-        <RepositoryItem repository={repository} />
-        <RepositoryItem repository={repository} />
+        { repositories?.map(repository => {
+          return <RepositoryItem key={repository.id} repository={repository} />
+        })}
       </ul>
     </section>
   )
